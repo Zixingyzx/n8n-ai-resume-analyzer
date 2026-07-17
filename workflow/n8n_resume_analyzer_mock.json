@@ -1,0 +1,215 @@
+{
+  "name": "AI Resume Analyzer - Credential-Free Demo",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "AI Resume Analyzer",
+        "formDescription": "Upload a text-based PDF resume and paste a job description. Use sanitized data for public demos.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Resume PDF",
+              "fieldName": "resume_file",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Target role",
+              "fieldName": "target_role",
+              "fieldType": "text",
+              "placeholder": "e.g. Working Student AI Automation",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Job description",
+              "fieldName": "job_description",
+              "fieldType": "textarea",
+              "placeholder": "Paste the complete job description here",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "buttonLabel": "Analyze resume",
+          "respondWithOptions": {
+            "values": {
+              "respondWith": "text",
+              "formSubmittedText": "Analysis completed. Inspect the final node output in n8n."
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -760,
+        80
+      ],
+      "id": "7f0a03cf-f695-49b3-b88a-a95b30597603",
+      "name": "Resume Analyzer Form",
+      "webhookId": "0cd6c6ce-f4c4-4de4-9ef0-5f6377c4e2f1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "resume_file",
+        "options": {
+          "joinPages": true,
+          "keepSource": "json",
+          "maxPages": 0
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -500,
+        80
+      ],
+      "id": "f54aeddd-93ad-4748-92bc-c3cfd4d2493e",
+      "name": "Extract Resume Text"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst resumeText = String(input.text ?? '').trim();\nconst jobDescription = String(input.job_description ?? '').trim();\nconst targetRole = String(input.target_role ?? '').trim() || 'Not specified';\n\nif (!resumeText) {\n  throw new Error('No resume text was extracted. Use a text-based PDF; scanned PDFs require OCR.');\n}\nif (resumeText.length < 150) {\n  throw new Error(`Extracted resume text is too short (${resumeText.length} characters).`);\n}\nif (jobDescription.length < 80) {\n  throw new Error('Job description is too short for a meaningful comparison.');\n}\n\nreturn [{\n  json: {\n    ...input,\n    input_valid: true,\n    resume_text: resumeText,\n    job_description: jobDescription,\n    target_role: targetRole,\n  },\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        80
+      ],
+      "id": "1d6672d8-b24e-4b92-936f-55905a9c654c",
+      "name": "Validate Input"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst resume = data.resume_text.toLowerCase();\nconst jd = data.job_description.toLowerCase();\n\nconst groups = {\n  'Python': ['python'],\n  'C++': ['c++', 'cpp'],\n  'MATLAB': ['matlab', 'simulink'],\n  'Git': ['git', 'github', 'gitlab'],\n  'n8n': ['n8n'],\n  'REST API': ['rest api', 'restful', 'api integration'],\n  'Webhooks': ['webhook', 'webhooks'],\n  'JSON': ['json'],\n  'Machine Learning': ['machine learning', 'pytorch', 'tensorflow'],\n  'Data Analysis': ['data analysis', 'data analytics', 'pandas', 'numpy'],\n  'SQL': ['sql', 'postgres', 'mysql'],\n  'Docker': ['docker', 'container'],\n  'Linux': ['linux', 'ubuntu'],\n  'Cloud': ['aws', 'azure', 'gcp', 'cloud platform'],\n  'RAG': ['rag', 'retrieval augmented generation', 'vector database'],\n  'Robotics': ['robotics', 'ros'],\n  'Signal Processing': ['signal processing', 'fft', 'filtering'],\n  'PLC': ['plc', 'siemens s7', 'tia portal'],\n};\n\nconst containsAny = (text, aliases) => aliases.some(alias => text.includes(alias));\nconst required = Object.entries(groups).filter(([, aliases]) => containsAny(jd, aliases)).map(([skill]) => skill);\nconst matched = required.filter(skill => containsAny(resume, groups[skill]));\nconst missing = required.filter(skill => !matched.includes(skill));\n\nconst keywordScore = required.length ? 70 * matched.length / required.length : 35;\nconst sectionTerms = ['profile', 'education', 'experience', 'projects', 'skills'];\nconst sectionHits = sectionTerms.filter(term => resume.includes(term)).length;\nconst structureScore = Math.min(15, sectionHits * 3);\nconst hasEmail = /[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}/.test(data.resume_text);\nconst hasLink = resume.includes('github.com') || resume.includes('linkedin.com');\nconst contactScore = (hasEmail ? 5 : 0) + (hasLink ? 3 : 0);\nconst evidenceTerms = ['developed', 'built', 'implemented', 'analyzed', 'improved', 'created'];\nconst evidenceHits = evidenceTerms.reduce((sum, term) => sum + (resume.split(term).length - 1), 0);\nconst evidenceScore = Math.min(7, evidenceHits);\nconst score = Math.round(Math.min(100, keywordScore + structureScore + contactScore + evidenceScore));\n\nconst firstLine = data.resume_text.split(/\\r?\\n/).map(x => x.trim()).find(Boolean) || 'Not reliably detected';\nconst candidateName = firstLine.length <= 60 && !/[@|:/]/.test(firstLine) ? firstLine : 'Not reliably detected';\n\nconst strengths = [];\nif (matched.length) strengths.push(`Documented overlap with key requirements: ${matched.slice(0, 6).join(', ')}`);\nif (sectionHits >= 4) strengths.push('Clear resume structure with multiple ATS-readable sections');\nif (evidenceHits >= 3) strengths.push('Uses evidence-oriented action verbs in technical bullets');\nif (hasEmail && hasLink) strengths.push('Contact information and a professional project link are easy to find');\nif (!strengths.length) strengths.push('The resume contains enough text for an initial structured review');\n\nconst weaknesses = [];\nif (missing.length) weaknesses.push(`Not explicitly documented: ${missing.slice(0, 6).join(', ')}`);\nif (!hasLink) weaknesses.push('No GitHub or LinkedIn URL was detected');\nif (evidenceHits < 3) weaknesses.push('Project bullets could use more action verbs and measurable outcomes');\nif (sectionHits < 4) weaknesses.push('Some common ATS sections are missing or use unusual headings');\n\nconst actions = missing.slice(0, 4).map(skill => `Add ${skill} only if you have real experience; otherwise build a small demonstrable project first`);\nactions.push('Rewrite the strongest two project bullets using action + method + measurable result');\nactions.push('Place the most role-relevant skills and evidence in the top half of the resume');\nactions.push('Keep PDF formatting simple and verify that its text can be selected and copied');\n\nconst interviewQuestions = [\n  `Explain one project that best demonstrates your fit for ${data.target_role}.`,\n  'Describe how you validated your results and handled an unexpected failure.',\n  'Which part of this workflow would you keep in n8n and which part would you implement in Python?',\n];\nif (missing.length) interviewQuestions.push(`How would you close the gap in ${missing[0]} during your first month?`);\n\nreturn [{ json: {\n  analysis_mode: 'mock',\n  candidate_name: candidateName,\n  target_role: data.target_role,\n  ats_score: score,\n  professional_summary: `The resume shows ${matched.length} of ${required.length} detected job-relevant skill groups. Review the score together with the documented project and experience evidence.`,\n  matched_skills: matched,\n  missing_skills: missing,\n  strengths: strengths.slice(0, 5),\n  weaknesses: weaknesses.slice(0, 5),\n  recommended_actions: actions.slice(0, 7),\n  interview_questions: interviewQuestions.slice(0, 5),\n  disclaimer: 'Credential-free heuristic demo; not a hiring decision or validated ATS score.',\n} }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        20,
+        80
+      ],
+      "id": "1b95a9e9-a60e-40bb-aacf-4e7136b6859a",
+      "name": "Analyze Resume - Mock"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nlet a = raw.output ?? raw;\nif (typeof a === 'string') {\n  try { a = JSON.parse(a); } catch { throw new Error('Analysis output is not valid JSON.'); }\n}\n\nconst list = value => Array.isArray(value) && value.length\n  ? value.map(item => `- ${item}`).join('\\n')\n  : '- None detected';\n\nconst report = `# Resume Analysis Report\n\n**Mode:** ${a.analysis_mode ?? 'openai'}  \n**Candidate:** ${a.candidate_name ?? 'Not reliably detected'}  \n**Target role:** ${a.target_role ?? 'Not specified'}  \n**ATS-style score:** ${a.ats_score ?? 'N/A'}/100\n\n## Summary\n\n${a.professional_summary ?? ''}\n\n## Matched skills\n\n${list(a.matched_skills)}\n\n## Missing or under-documented skills\n\n${list(a.missing_skills)}\n\n## Strengths\n\n${list(a.strengths)}\n\n## Weaknesses / resume gaps\n\n${list(a.weaknesses)}\n\n## Recommended actions\n\n${list(a.recommended_actions)}\n\n## Suggested interview questions\n\n${list(a.interview_questions)}\n\n---\n\n*${a.disclaimer ?? 'AI-assisted heuristic review; verify all claims manually.'}*`;\n\nreturn [{ json: { ...a, report_markdown: report } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        280,
+        80
+      ],
+      "id": "bda672d2-8a09-48c9-a449-57dc6797625a",
+      "name": "Generate Markdown Report"
+    },
+    {
+      "parameters": {
+        "content": "## 1. Intake\nThe n8n form collects one PDF resume, a target role, and a complete job description.",
+        "height": 180,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -820,
+        -180
+      ],
+      "id": "88785e41-c494-4fb6-957e-3a1f594f15d4",
+      "name": "Intake Note"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Extraction and validation\nPDF binary data becomes text. Invalid or too-short inputs fail before analysis.",
+        "height": 180,
+        "width": 360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        -180
+      ],
+      "id": "36d6e6f7-a799-4d79-8cf2-ce513af4cf1f",
+      "name": "Validation Note"
+    },
+    {
+      "parameters": {
+        "content": "## 3. Credential-free analysis\nTransparent keyword and structure rules generate reproducible JSON and a Markdown report.",
+        "height": 180,
+        "width": 420
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        -180
+      ],
+      "id": "d766e534-0fe8-4c55-8653-1ddc02719d64",
+      "name": "Analysis Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Resume Analyzer Form": {
+      "main": [
+        [
+          {
+            "node": "Extract Resume Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Resume Text": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Analyze Resume - Mock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Resume - Mock": {
+      "main": [
+        [
+          {
+            "node": "Generate Markdown Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bca77d5d-3ad6-4e55-bc32-adc314bf6f5b",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

@@ -1,0 +1,59 @@
+# Resume Analysis Report
+
+**Mode:** mock  
+**Candidate:** Alex Morgan  
+**Target role:** Working Student AI Automation  
+**ATS-style score:** 57/100
+
+## Summary
+
+The resume shows 5 of 11 detected job-relevant skill groups and should be reviewed together with the evidence in the project and experience sections.
+
+## Matched skills
+
+- Python
+- Git
+- REST API
+- JSON
+- Data Analysis
+
+## Missing or under-documented skills
+
+- n8n
+- Webhooks
+- SQL
+- Docker
+- Cloud
+- RAG
+
+## Strengths
+
+- Documented overlap with key technical requirements: Python, Git, REST API, JSON, Data Analysis
+- Clear resume structure with multiple ATS-readable sections
+- Contact information and a professional project link are easy to find
+
+## Weaknesses / resume gaps
+
+- The resume does not explicitly document: n8n, Webhooks, SQL, Docker, Cloud, RAG
+- Project bullets could use more action verbs and measurable outcomes
+
+## Recommended actions
+
+- Add n8n only if you have real experience; otherwise build a small demonstrable project first
+- Add Webhooks only if you have real experience; otherwise build a small demonstrable project first
+- Add SQL only if you have real experience; otherwise build a small demonstrable project first
+- Add Docker only if you have real experience; otherwise build a small demonstrable project first
+- Rewrite the strongest two project bullets using action + method + measurable result
+- Place the most role-relevant skills and project evidence in the top half of the resume
+- Keep formatting simple and verify that PDF text can be selected and copied
+
+## Suggested interview questions
+
+- Explain one project that best demonstrates your fit for Working Student AI Automation.
+- Describe how you validated your results and handled an unexpected failure.
+- Which part of this workflow would you keep in n8n and which part would you implement in Python?
+- How would you close the gap in n8n during your first month?
+
+---
+
+*Credential-free heuristic demo; not a hiring decision or validated ATS score.*

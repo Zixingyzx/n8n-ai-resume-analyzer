@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="440" viewBox="0 0 1440 440" role="img" aria-labelledby="title desc">
+  <title id="title">AI Resume Analyzer architecture</title>
+  <desc id="desc">Form upload flows through PDF extraction, validation, analysis, structured JSON and Markdown reporting.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#374151"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1440" height="440" rx="24" fill="#f8fafc"/>
+  <text x="720" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#111827">AI Resume Analyzer — n8n Workflow Architecture</text>
+
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="50" y="130" width="190" height="110" rx="16" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <text x="145" y="172" font-size="20" font-weight="700" fill="#111827">Form Trigger</text>
+    <text x="145" y="202" font-size="15" fill="#475569">PDF + role + JD</text>
+
+    <rect x="285" y="130" width="190" height="110" rx="16" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <text x="380" y="172" font-size="20" font-weight="700" fill="#111827">Extract PDF</text>
+    <text x="380" y="202" font-size="15" fill="#475569">Binary to text/JSON</text>
+
+    <rect x="520" y="130" width="190" height="110" rx="16" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <text x="615" y="172" font-size="20" font-weight="700" fill="#111827">Validate</text>
+    <text x="615" y="202" font-size="15" fill="#475569">Fail early on bad input</text>
+
+    <rect x="755" y="75" width="205" height="95" rx="16" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <text x="857" y="112" font-size="19" font-weight="700" fill="#111827">Mock Analyzer</text>
+    <text x="857" y="140" font-size="14" fill="#475569">No credentials</text>
+
+    <rect x="755" y="215" width="205" height="95" rx="16" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <text x="857" y="252" font-size="19" font-weight="700" fill="#111827">OpenAI Chain</text>
+    <text x="857" y="280" font-size="14" fill="#475569">Schema-validated output</text>
+
+    <rect x="1005" y="130" width="190" height="110" rx="16" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <text x="1100" y="172" font-size="20" font-weight="700" fill="#111827">Structured JSON</text>
+    <text x="1100" y="202" font-size="15" fill="#475569">Score, skills, actions</text>
+
+    <rect x="1240" y="130" width="150" height="110" rx="16" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <text x="1315" y="172" font-size="20" font-weight="700" fill="#111827">Report</text>
+    <text x="1315" y="202" font-size="15" fill="#475569">Markdown</text>
+  </g>
+
+  <g stroke="#374151" stroke-width="3" fill="none" marker-end="url(#arrow)">
+    <path d="M240 185 H280"/>
+    <path d="M475 185 H515"/>
+    <path d="M710 165 C730 165, 730 122, 750 122"/>
+    <path d="M710 205 C730 205, 730 262, 750 262"/>
+    <path d="M960 122 C985 122, 980 165, 1000 165"/>
+    <path d="M960 262 C985 262, 980 205, 1000 205"/>
+    <path d="M1195 185 H1235"/>
+  </g>
+
+  <text x="720" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#475569">Reproducible demo path and credential-backed AI path share the same intake, validation, and reporting design.</text>
+</svg>

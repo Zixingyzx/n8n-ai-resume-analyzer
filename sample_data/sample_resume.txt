@@ -1,0 +1,27 @@
+Alex Morgan
+Berlin, Germany | alex.morgan@example.com | github.com/alexmorgan
+
+PROFILE
+Electrical Engineering Master's student with experience in Python automation, sensor data analysis, robotics, and machine learning. Interested in working student roles involving AI workflow automation and industrial data systems.
+
+EDUCATION
+M.Sc. Electrical Engineering, Technical University, 2024-present
+Focus: robotics, machine learning, signal processing, control systems
+
+PROJECTS
+Industrial Sensor Analytics
+- Built Python scripts to clean and analyze time-series sensor measurements.
+- Created automated CSV reports and visualizations for calibration experiments.
+- Used Git for version control and documented test procedures.
+
+Robotics Perception Project
+- Processed acoustic sensor data and trained classification models.
+- Integrated data acquisition, feature extraction, and model evaluation.
+- Collaborated with a multidisciplinary research team.
+
+SKILLS
+Python, C++, MATLAB, Git, Machine Learning, Data Analysis, Signal Processing,
+REST API fundamentals, JSON, Linux, Robotics, PLC fundamentals
+
+LANGUAGES
+English, German

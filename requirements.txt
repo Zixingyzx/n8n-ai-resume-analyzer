@@ -1,0 +1,2 @@
+# No third-party Python packages are required for the credential-free demo.
+# The test suite uses Python's built-in unittest module.

@@ -1,0 +1,20 @@
+Working Student AI Automation
+
+We are looking for a working student to support the automation of internal processes.
+
+Responsibilities:
+- Build and maintain workflows with n8n or a similar automation platform.
+- Integrate REST APIs, webhooks, and AI services.
+- Process and validate JSON data.
+- Use Python for custom logic and data analysis.
+- Document workflows, test edge cases, and collaborate through Git.
+
+Requirements:
+- Enrolled in a technical degree program.
+- Practical Python and Git experience.
+- Basic understanding of REST APIs and webhooks.
+- Interest in LLM applications and workflow automation.
+- Structured, independent working style.
+
+Nice to have:
+- Docker, SQL, cloud platforms, or RAG experience.
