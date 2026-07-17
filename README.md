@@ -18,6 +18,22 @@ The repository includes two n8n workflows:
 5. Produces a consistent JSON result with an ATS-style score, strengths, gaps, matched skills, missing skills, recommendations, and interview questions.
 6. Formats the result as a Markdown report.
 
+## Validation
+
+The workflow was successfully tested on n8n Cloud (July 2026).
+
+Test scenario:
+
+- Upload PDF resume
+- Extract resume text
+- Validate input
+- Analyze resume
+- Generate Markdown report
+
+Result:
+
+All nodes executed successfully.<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/e66c4bb0-bdaf-481e-b141-911e39b146bc" />
+
 ## Architecture
 
 ![Workflow architecture](docs/architecture.svg)
@@ -204,3 +220,6 @@ See [`docs/screenshots/README.md`](docs/screenshots/README.md).
 ## License
 
 MIT License. See [`LICENSE`](LICENSE).
+
+
+
