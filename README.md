@@ -1,6 +1,6 @@
 # AI Resume Analyzer with n8n
 
-A portfolio-ready workflow that accepts a PDF resume and a job description, extracts the resume text, validates the input, evaluates job fit, and produces a structured analysis plus a Markdown report.
+A portfolio-ready workflow that accepts a PDF resume and a job description, extracts and validates the resume text, evaluates job fit, generates a structured analysis, and produces a downloadable Markdown report.
 
 The repository includes two n8n workflows:
 
@@ -17,6 +17,7 @@ The repository includes two n8n workflows:
 4. Runs either a credential-free rules-based analyzer or an OpenAI model.
 5. Produces a consistent JSON result with an ATS-style score, strengths, gaps, matched skills, missing skills, recommendations, and interview questions.
 6. Formats the result as a Markdown report.
+7. Converts the Markdown report into a downloadable `.md` file.
 
 ## Validation
 
@@ -29,10 +30,12 @@ Test scenario:
 - Validate input
 - Analyze resume
 - Generate Markdown report
+- Convert the report into a downloadable Markdown file
 
 Result:
 
-All nodes executed successfully.<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/e66c4bb0-bdaf-481e-b141-911e39b146bc" />
+All nodes executed successfully, including the final Convert to File node.
+<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/e66c4bb0-bdaf-481e-b141-911e39b146bc" />
 
 ## Architecture
 
@@ -49,6 +52,7 @@ flowchart LR
     E --> H[Structured JSON]
     G --> H
     H --> I[Markdown report]
+    I --> J[Convert to File\nDownloadable .md report]
 ```
 
 ## Repository structure
@@ -64,11 +68,12 @@ n8n-ai-resume-analyzer/
 ├── tests/
 │   └── test_resume_analyzer.py
 ├── sample_data/
-│   ├── sample_resume.txt
+│   ├── sample_resume.pdf
 │   └── sample_job_description.txt
 ├── outputs/
 │   ├── example_analysis.json
-│   └── example_report.md
+│   ├── example_report.md
+│   └── sample_resume_analysis_report.md
 ├── prompts/
 │   └── resume_analysis_prompt.md
 ├── docs/
@@ -132,9 +137,21 @@ outputs/report.md
 4. Select **Test workflow**.
 5. Upload a text-based PDF resume, enter a target role, and paste a job description.
 6. Submit the form.
-7. Open the final **Generate Markdown Report** node and inspect `report_markdown`.
+7. Open the **Generate Markdown Report** node and inspect `report_markdown`.
+8. Open the final **Convert to File** node.
+9. In the Binary output, download `Resume_Analysis_Report.md`.
 
 Detailed instructions: [`docs/N8N_VALIDATION.md`](docs/N8N_VALIDATION.md)
+
+### Test with the included sample data
+
+The repository includes fictional test files that can be safely used for public demonstrations:
+
+- `sample_data/sample_resume.pdf`
+- `sample_data/job_description.txt`
+
+Upload the sample resume and paste the contents of the job description file into the n8n form.
+
 
 ## Enable real AI analysis
 
@@ -189,6 +206,7 @@ python -m unittest discover -s tests -v
 - **Form Trigger:** creates a small upload interface without a separate frontend.
 - **Extract From File:** converts the uploaded PDF from binary data to text/JSON.
 - **Code node:** validates input and implements transparent demo logic.
+- **Convert to File:** converts the generated Markdown string into a downloadable report file.
 - **Basic LLM Chain:** sends a controlled prompt to the model; an agent is unnecessary because no autonomous tool selection is required.
 - **Structured Output Parser:** enforces a predictable JSON structure.
 - **Separate mock and AI workflows:** allows recruiters to reproduce the project without credentials while preserving a realistic production upgrade path.
@@ -203,19 +221,26 @@ AI-generated evaluations can contain errors or bias. Use the output for resume i
 
 > Built an n8n-based resume analysis workflow that accepts PDF uploads, extracts and validates resume text, compares candidate skills against a job description, and generates structured JSON and Markdown reports. Implemented a credential-free reproducible demo, an OpenAI upgrade path, schema-validated output, tests, documentation, privacy safeguards, and error handling.
 
-## Planned screenshots
+## Screenshots
 
-After running the workflow, add:
+### Successful workflow execution
 
-```text
-docs/screenshots/01-workflow-overview.png
-docs/screenshots/02-upload-form.png
-docs/screenshots/03-extracted-text.png
-docs/screenshots/04-analysis-output.png
-docs/screenshots/05-markdown-report.png
-```
+The complete n8n workflow executes successfully from PDF upload to downloadable report generation.
 
-See [`docs/screenshots/README.md`](docs/screenshots/README.md).
+![Successful n8n workflow execution](docs/screenshots/workflow_success.png)
+
+### Resume analysis output
+
+The workflow generates a structured ATS-style analysis with matched skills, missing skills, recommendations, and interview questions.
+
+![Resume analysis output](docs/screenshots/report_output.png)
+
+### Downloadable Markdown report
+
+The final Convert to File node creates a downloadable Markdown report.
+
+![Downloadable Markdown report](docs/screenshots/downloadable_report.png)
+
 
 ## License
 
