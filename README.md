@@ -35,7 +35,27 @@ Test scenario:
 Result:
 
 All nodes executed successfully, including the final Convert to File node.
-<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/e66c4bb0-bdaf-481e-b141-911e39b146bc" />
+
+## Screenshots
+
+### Successful workflow execution
+
+The complete n8n workflow executes successfully from PDF upload to downloadable report generation.
+
+![Successful n8n workflow execution](docs/screenshots/workflow_success.png)
+
+### Resume analysis output
+
+The workflow generates a structured ATS-style analysis with matched skills, missing skills, recommendations, and interview questions.
+
+![Resume analysis output](docs/screenshots/report_output.png)
+
+### Downloadable Markdown report
+
+The final Convert to File node creates a downloadable Markdown report.
+
+![Downloadable Markdown report](docs/screenshots/downloadable_report.png)
+Additional screenshot documentation: [`docs/screenshots/README.md`](docs/screenshots/README.md)
 
 ## Architecture
 
@@ -221,25 +241,6 @@ AI-generated evaluations can contain errors or bias. Use the output for resume i
 
 > Built an n8n-based resume analysis workflow that accepts PDF uploads, extracts and validates resume text, compares candidate skills against a job description, and generates structured JSON and Markdown reports. Implemented a credential-free reproducible demo, an OpenAI upgrade path, schema-validated output, tests, documentation, privacy safeguards, and error handling.
 
-## Screenshots
-
-### Successful workflow execution
-
-The complete n8n workflow executes successfully from PDF upload to downloadable report generation.
-
-![Successful n8n workflow execution](docs/screenshots/workflow_success.png)
-
-### Resume analysis output
-
-The workflow generates a structured ATS-style analysis with matched skills, missing skills, recommendations, and interview questions.
-
-![Resume analysis output](docs/screenshots/report_output.png)
-
-### Downloadable Markdown report
-
-The final Convert to File node creates a downloadable Markdown report.
-
-![Downloadable Markdown report](docs/screenshots/downloadable_report.png)
 
 
 ## License
